@@ -15,13 +15,24 @@
 ####################################################################
 
 if (UNIX)
-if ("${CMAKE_SYSTEM}" MATCHES "Linux")
-
-    # ODE
-	set (ODE_INCLUDE_PATH "/usr/local/include")
-	set (ODE_LIBRARIES "/usr/local/lib/libode.a")
-
-endif ()
+  if ("${CMAKE_SYSTEM}" MATCHES "Linux")
+    if($ENV{BELLATRIX})
+      # ODE
+      set (ODE_INCLUDE_PATH "/home/auerbach/etc/include")
+      set (ODE_LIBRARIES "/home/auerbach/etc/lib/libode.a")
+	
+      # BOOST
+      set (BOOST_ROOT "/home/auerbach/etc")
+      set (Boost_NO_SYSTEM_PATHS ON)
+      set (Boost_NO_BOOST_CMAKE "TRUE")
+      set (Boost_REALPATH ON)
+    else()
+      # ODE
+      set (ODE_INCLUDE_PATH "/usr/local/include")
+      set (ODE_LIBRARIES "/usr/local/lib/libode.a")
+    endif()
+      
+  endif ()
 endif (UNIX)
 
 if (APPLE)

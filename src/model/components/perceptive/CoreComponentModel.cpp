@@ -32,6 +32,7 @@ namespace robogen {
 
 // mass of just the brick
 const float CoreComponentModel::BRICK_MASS = inGrams(11);//inGrams(14.9);
+  const float CoreComponentModel::CYL_MASS = inGrams(300);
 // mass of brick with electronics (including battery)
 const float CoreComponentModel::CORE_MASS = inGrams(11 + 40.5);//inGrams(14.9 + 40.5);
 const float CoreComponentModel::HEIGHT = inMm(35.5);
@@ -57,7 +58,11 @@ bool CoreComponentModel::initModel() {
 	this->createBoxGeom(coreComponent_, hasSensors_ ? CORE_MASS : BRICK_MASS,
 			osg::Vec3(0, 0, 0), WIDTH, WIDTH,
 			HEIGHT);
-
+	if(hasSensors_) {
+	  coreComponentCyl_ = createBody(B_CORE_COMPONENT_CYL_ID);
+	  createCylinderGeom(coreComponentCyl_, CYL_MASS, osg::Vec3(0,0,HEIGHT/2), 2, WIDTH/2, HEIGHT*2);
+	  fixBodies(coreComponent_, coreComponentCyl_, osg::Vec3(0,0,1));
+	}
 	return true;
 }
 
