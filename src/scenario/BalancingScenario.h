@@ -1,5 +1,5 @@
 /*
- * @(#) RacingScenario.cpp   1.0   Mar 13, 2013
+ * @(#) RacingScenario.h   1.0   Mar 13, 2013
  *
  * Andrea Maesani (andrea.maesani@epfl.ch)
  *
@@ -25,95 +25,54 @@
  *
  * @(#) $Id$
  */
-#include "config/RobogenConfig.h"
-#include "config/StartPositionConfig.h"
-#include "scenario/Environment.h"
-#include "scenario/BalancingScenario.h"
-#include "Robot.h"
-#include "Models.h"
+#ifndef ROBOGEN_BALANCING_SCENARIO_H_
+#define ROBOGEN_BALANCING_SCENARIO_H_
+
+#include <osg/Vec3>
+#include "scenario/Scenario.h"
+#include <vector>
 
 namespace robogen {
 
-BalancingScenario::BalancingScenario(boost::shared_ptr<RobogenConfig> robogenConfig) :
-		Scenario(robogenConfig), curTrial_(0) {
+/**
+ * Racing Scenario.
+ * The robot that can cover the longer distance in the given simulation time wins.
+ * The distance is computed as the euclidean distance from the starting to the ending position computed using as
+ * reference the core component.
+ */
+class BalancingScenario: public Scenario {
 
-	this->setEnvironment(boost::shared_ptr<Environment>(new Environment()));
+public:
 
-}
+	/**
+	 * Initializes a BalancingScenario
+	 */
+	BalancingScenario(boost::shared_ptr<RobogenConfig> robogenConfig);
 
-BalancingScenario::~BalancingScenario() {
+	/**
+	 * Destructor
+	 */
+	virtual ~BalancingScenario();
 
-}
+	/**
+	 * Methods inherited from {@link #Scenario}
+	 */
+	virtual bool setupSimulation();
+	virtual bool afterSimulationStep();
+	virtual bool endSimulation();
+	virtual double getFitness();
+	virtual bool remainingTrials();
+	virtual int getCurTrial() const;
 
-bool BalancingScenario::setupSimulation() {
+private:
 
-	// Compute robot start position,
-	startPosition_.push_back(this->getCurrentStartPosition()->getPosition());
-	accelsX_.push_back(0);
-	accelsY_.push_back(0);
-	anglesX_.push_back(0);
-	anglesY_.push_back(0);
+	std::vector<osg::Vec2> startPosition_;
+	std::vector<double> distances_;
+	std::vector<float> anglesX_, anglesY_, accelsX_, accelsY_;
+	unsigned int curTrial_;
 
-	return true;
-
-}
-
-bool BalancingScenario::afterSimulationStep() {
-
-  std::vector<boost::shared_ptr<Sensor> > sensors;
-  boost::dynamic_pointer_cast<CoreComponentModel, Model>(getRobot()->getCoreComponent())->getSensors(sensors);
-  accelsX_[curTrial_] = std::max(accelsX_[curTrial_], boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[0])->read());
-  accelsY_[curTrial_] = std::max(accelsY_[curTrial_], boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[1])->read());
-  double angle;
-  osg::Vec3 rotaxis;
-  getRobot()->getCoreComponent()->getRootAttitude().getRotate(angle,rotaxis);
-  osg::Vec3 rotation = rotaxis*angle;
-  anglesX_[curTrial_] += rotation.x();
-  anglesY_[curTrial_] += rotation.y();
-  
-  return true;
-}
-
-bool BalancingScenario::endSimulation() {
-
-	// Compute robot ending position from its closest part to the origin
-	double minDistance = std::numeric_limits<double>::max();
-	const std::vector<boost::shared_ptr<Model> >& bodyParts = this->getRobot()->getBodyParts();
-	for (unsigned int i = 0; i < bodyParts.size(); ++i) {
-		osg::Vec2 curBodyPos = osg::Vec2(bodyParts[i]->getRootPosition().x(), bodyParts[i]->getRootPosition().y());
-		osg::Vec2 curDistance = startPosition_[startPosition_.size()-1] - curBodyPos;
-		if (curDistance.length() < minDistance) {
-			minDistance = curDistance.length();
-		}
-	}
-
-	distances_.push_back(minDistance);
-	curTrial_++;
-	// Set next starting position
-	this->setStartingPosition(curTrial_);
-	return true;
+};
 
 }
 
-double BalancingScenario::getFitness() {
-
-	double fitness = 1000000;
-	for (unsigned int i = 0; i < distances_.size(); ++i) {
-	  double trialFit = pow(distances_[i],1.0/3.0)-pow(exp(anglesX_[i])+exp(anglesY_[i])+exp(accelsX_[i])+exp(accelsY_[i]),2.0/3.0);
-		if (trialFit < fitness)
-			fitness = trialFit;
-	}
-
-	return fitness;
-}
-
-bool BalancingScenario::remainingTrials() {
-	boost::shared_ptr<StartPositionConfig> startPos = this->getRobogenConfig()->getStartingPos();
-	return curTrial_ < startPos->getStartPosition().size();
-}
-
-int BalancingScenario::getCurTrial() const {
-	return curTrial_;
-}
-
-}
+#endif /* ROBOGEN_RACING_SCENARIO_H_ */
