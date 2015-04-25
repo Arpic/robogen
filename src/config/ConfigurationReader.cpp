@@ -548,7 +548,7 @@ boost::shared_ptr<RobogenConfig> ConfigurationReader::parseRobogenMessage(
 	} else if (scenario.compare("chasing") == 0) {
 		simulationScenario = RobogenConfig::CHASING;
 	} else if (scenario.compare("balancing") == 0) {
-	  simulationScenarion = RobogenConfig::BALANCING;
+	  simulationScenario = RobogenConfig::BALANCING;
 	} else {
 		std::cout << "Undefined 'scenario' parameter" << std::endl;
 		return boost::shared_ptr<RobogenConfig>();
