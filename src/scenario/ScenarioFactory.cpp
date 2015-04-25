@@ -30,6 +30,7 @@
 #include "scenario/ChasingScenario.h"
 #include "scenario/ScenarioFactory.h"
 #include "scenario/RacingScenario.h"
+#include "scenario/BalancingScenario.h"
 
 namespace robogen {
 
@@ -47,6 +48,8 @@ boost::shared_ptr<Scenario> ScenarioFactory::createScenario(boost::shared_ptr<Ro
 		return boost::shared_ptr<Scenario>(new RacingScenario(config));
 	} else if (config->getScenario() == RobogenConfig::CHASING) {
 		return boost::shared_ptr<Scenario>(new ChasingScenario(config));
+	} else if (config->getScenario() == RobogenConfig::BALANCING) {
+		return boost::shared_ptr<Scenario>(new BalancingScenario(config));
 	} else {
 		std::cout << "Cannot allocate the specified scenario. Quit."
 				<< std::endl;

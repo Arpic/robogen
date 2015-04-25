@@ -40,10 +40,12 @@ public:
 
 	static const float BRICK_MASS;
 	static const float CORE_MASS;
+	static const float CYL_MASS;
 	static const float HEIGHT;
 	static const float WIDTH;
 
 	static const unsigned int B_CORE_COMPONENT_ID = 0;
+	static const unsigned int B_CORE_COMPONENT_CYL_ID = 1;
 
 	enum neuronType{
 		LEFT_FACE_SLOT, /* corresponds to inputs */
@@ -90,6 +92,7 @@ private:
 	boost::shared_ptr<ImuSensor> sensor_;
 
 	dBodyID coreComponent_;
+	dBodyID coreComponentCyl_;
 
 	bool hasSensors_;
 
