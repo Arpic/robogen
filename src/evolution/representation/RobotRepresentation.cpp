@@ -509,6 +509,21 @@ bool RobotRepresentation::init(std::string robotTextFile) {
 	file.close();
 
 	maxid_ = 1000;
+
+	// loop through existing ids to find what new maxid should be.
+	// this is necessary when trying to seed evolution with a previously
+	// evolved morphology
+	for(IdPartMap::iterator i = idToPart_.begin(); i!= idToPart_.end(); ++i) {
+		if(i->first.substr(0,4).compare("myid") == 0) {
+			int idVal = atoi(i->first.substr(4).c_str());
+			if (idVal >= maxid_) {
+				maxid_ = idVal + 1;
+			}
+		}
+	}
+
+
+
 	return true;
 }
 
