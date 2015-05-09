@@ -68,8 +68,8 @@ bool BalancingScenario::afterSimulationStep() {
   osg::Vec3 rotaxis;
   getRobot()->getCoreComponent()->getRootAttitude().getRotate(angle,rotaxis);
   osg::Vec3 rotation = rotaxis*angle;
-  anglesX_[curTrial_] += rotation.x();
-  anglesY_[curTrial_] += rotation.y();
+  anglesX_[curTrial_] += abs(rotation.x());
+  anglesY_[curTrial_] += abs(rotation.y());
   
   return true;
 }
@@ -99,7 +99,11 @@ double BalancingScenario::getFitness() {
 
 	double fitness = 1000000;
 	for (unsigned int i = 0; i < distances_.size(); ++i) {
-	  double trialFit = distances_[i]-anglesX_[i]-anglesY_[i]-accelsX_[i]-accelsY_[i];
+//	std::cout << "Angles: " << anglesX_[i] << " " << anglesY_[i] << std::endl;
+//	std::cout << "Accels: " << accelsX_[i] << " " << accelsY_[i] << std::endl;
+	std::cout << distances_[i] << std::endl;
+
+	  double trialFit = distances_[i]*100-(exp(anglesX_[i])+exp(anglesY_[i])+exp(accelsX_[i])+exp(accelsY_[i]));
 		if (trialFit < fitness)
 			fitness = trialFit;
 	}
