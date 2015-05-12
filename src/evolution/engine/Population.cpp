@@ -110,6 +110,22 @@ boost::shared_ptr<RobotRepresentation> Population::best() {
 	return this->at(0);
 }
 
+  bool Population::getVals(double& averageDist, double &averageAngle) const {
+	if (!this->areEvaluated()) {
+		std::cout << "Trying to get stats on non-evaluated population"
+				<< std::endl;
+	}
+	boost::accumulators::accumulator_set<double,
+			boost::accumulators::stats<boost::accumulators::tag::mean> > acc;
+	for (unsigned int i = 0; i < this->size(); i++)
+		acc(this->at(i)->getVals().first);
+	averageDist = boost::accumulators::mean(acc);
+	for (unsigned int i = 0; i < this->size(); i++)
+		acc(this->at(i)->getVals().second);
+	averageAngle = boost::accumulators::mean(acc);
+	return true;
+  }    
+
 bool Population::getStat(double &bestFit, double &average,
 		double &stdev) const {
 

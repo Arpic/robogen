@@ -188,11 +188,13 @@ int main(int argc, char* argv[]) {
 					// Compute fitness
 					// ---------------------------------------
 					double fitness;
+					std::pair<double, double> vals;
 					if (simulationResult == ACCELERATION_CAP_EXCEEDED) {
 						fitness = MIN_FITNESS;
 					} else {
 						fitness = scenario->getFitness();
 					}
+					vals = scenario->getIntermediateValues();
 					std::cout << "Fitness for the current solution: " << fitness
 							<< std::endl << std::endl;
 
@@ -202,6 +204,8 @@ int main(int argc, char* argv[]) {
 					boost::shared_ptr<robogenMessage::EvaluationResult> evalResultPacket(
 							new robogenMessage::EvaluationResult());
 					evalResultPacket->set_fitness(fitness);
+					evalResultPacket->add_values(vals.first);
+					evalResultPacket->add_values(vals.second);
 					evalResultPacket->set_id(packet.getMessage()->robot().id());
 					ProtobufPacket<robogenMessage::EvaluationResult> evalResult;
 					evalResult.setMessage(evalResultPacket);

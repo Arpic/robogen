@@ -102,5 +102,6 @@ message EvaluationResult {
     required int32 id = 1; 
     required float fitness = 2;
     repeated float objectives = 3;
+    repeated float values = 4;
 }
 

@@ -67,11 +67,6 @@ public:
 	 */
 	bool logGeneration(int step, Population &population);
 
-
-	static std::ofstream& getFitLog() {
-	  return fitVals;
-	}
-
 private:
 	/**
 	 * Log directory
@@ -81,7 +76,7 @@ private:
 	 * File stream to BestAvgStd.txt
 	 */
 	std::ofstream bestAvgStd_;
-	static std::ofstream fitVals;
+	std::ofstream fitVals_;
 	/**
 	 * Helper utility to back up the various configuration files
 	 * @param fileName, name of the file to backup
@@ -89,6 +84,5 @@ private:
 
 	void copyConfFile(std::string fileName);
 };
-
 } /* namespace robogen */
 #endif /* EVOLVERLOG_H_ */

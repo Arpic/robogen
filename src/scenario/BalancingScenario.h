@@ -61,6 +61,7 @@ public:
 	virtual bool afterSimulationStep();
 	virtual bool endSimulation();
 	virtual double getFitness();
+	virtual std::pair<double, double> getIntermediateValues();
 	virtual bool remainingTrials();
 	virtual int getCurTrial() const;
 
@@ -69,6 +70,7 @@ private:
 	std::vector<osg::Vec2> startPosition_;
 	std::vector<double> distances_;
 	std::vector<float> anglesX_, anglesY_, accelsX_, accelsY_;
+	double distance,angle;
 	unsigned int curTrial_;
 
 };

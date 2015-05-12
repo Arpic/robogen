@@ -41,7 +41,6 @@ namespace robogen {
 #define GENERATION_BEST_PREFIX "GenerationBest-"
 
 #define FIT_LOG_FILE "FitVals.txt"
-  std::ofstream EvolverLog::fitVals;
 
 EvolverLog::EvolverLog(){
 }
@@ -80,8 +79,8 @@ bool EvolverLog::init(boost::shared_ptr<EvolverConfiguration> conf,
 	}
 
 	std::string fitLogPath = logPath_ + "/" + FIT_LOG_FILE;
-	fitVals.open(fitLogPath.c_str());
-	if (!fitVals.is_open()){
+	fitVals_.open(fitLogPath.c_str());
+	if (!fitVals_.is_open()){
 	  std::cout << "Can't open FitVals file " << " " <<  fitLogPath << std::endl;
 		return false;
 	}
@@ -121,6 +120,11 @@ bool EvolverLog::logGeneration(int step, Population &population) {
 				stdev << std::endl;
 	bestAvgStd_ << step << " " << best << " " <<
 			average << " "  << stdev << std::endl;
+
+	population.getVals(best, average);
+	fitVals_ << step << " " << best << " " <<
+			average <<std::endl;
+	
 
 	// save robot file of best robot (don't do with fake robot representation)
 	#ifndef FAKEROBOTREPRESENTATION_H

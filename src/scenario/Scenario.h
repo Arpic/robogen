@@ -139,6 +139,10 @@ public:
 	 */
 	virtual double getFitness() = 0;
 
+	virtual std::pair<double,double> getIntermediateValues() {
+	  return std::make_pair(0,0);
+	}
+
 	/**
 	 * @return true if another trial must be executed
 	 */

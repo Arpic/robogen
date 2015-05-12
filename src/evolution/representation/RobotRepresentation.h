@@ -129,6 +129,7 @@ public:
 	 * @return fitness of individual
 	 */
 	double getFitness() const;
+	std::pair<double, double> getVals() const;
 
 	/**
 	 * @return evaluated_
@@ -247,6 +248,7 @@ private:
 	 * Fitness of robot, once evaluated.
 	 */
 	double fitness_;
+	std::pair<double,double> vals_;
 
 	/**
 	 * Counter for unique ID.

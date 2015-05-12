@@ -100,8 +100,6 @@ bool BalancingScenario::endSimulation() {
 double BalancingScenario::getFitness() {
 
 	double fitness = 1000000;
-	double distance;
-	double angle;
 	for (unsigned int i = 0; i < distances_.size(); ++i) {
 //	std::cout << "Angles: " << anglesX_[i] << " " << anglesY_[i] << std::endl;
 //	std::cout << "Accels: " << accelsX_[i] << " " << accelsY_[i] << std::endl;
@@ -114,10 +112,16 @@ double BalancingScenario::getFitness() {
 			angle = (anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
 	  }
 	}
-	std::cout << "Writing" << std::endl;
-	EvolverLog::getFitLog() << distance << angle << std::endl;
+	//std::cout << "Writing: " << distance << " " << angle << std::endl;
+	//EvolverLog::Log(distance, angle);
+	//	robogen::fitVals<< distance << " " << angle << std::endl;
+	//EvolverLog::getFitLog() << distance << " " << angle << std::endl;
 	return fitness;
 }
+
+  std::pair<double,double> BalancingScenario::getIntermediateValues() {
+    return std::make_pair(distance, angle);
+  }
 
 bool BalancingScenario::remainingTrials() {
 	boost::shared_ptr<StartPositionConfig> startPos = this->getRobogenConfig()->getStartingPos();

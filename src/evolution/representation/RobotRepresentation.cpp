@@ -329,6 +329,7 @@ RobotRepresentation &RobotRepresentation::operator=(
 		}
 	}
 	fitness_ = r.fitness_;
+	vals_ = r.vals_;
 	evaluated_ = r.evaluated_;
 	maxid_ = r.maxid_;
 	return *this;
@@ -599,6 +600,7 @@ void RobotRepresentation::evaluate(TcpSocket *socket,
 		exit(EXIT_FAILURE);
 	} else {
 		fitness_ = resultPacket.getMessage()->fitness();
+		vals_ = std::make_pair(resultPacket.getMessage()->values(0),resultPacket.getMessage()->values(1));
 		evaluated_ = true;
 	}
 
@@ -607,6 +609,10 @@ void RobotRepresentation::evaluate(TcpSocket *socket,
 double RobotRepresentation::getFitness() const {
 	return fitness_;
 }
+
+  std::pair<double, double> RobotRepresentation::getVals() const {
+    return vals_;
+  }
 
 bool RobotRepresentation::isEvaluated() const {
 	return evaluated_;
