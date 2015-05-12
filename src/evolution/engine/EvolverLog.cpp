@@ -40,6 +40,9 @@ namespace robogen {
 #define BAS_LOG_FILE "BestAvgStd.txt"
 #define GENERATION_BEST_PREFIX "GenerationBest-"
 
+#define FIT_LOG_FILE "FitVals.txt"
+  std::ofstream EvolverLog::fitVals;
+
 EvolverLog::EvolverLog(){
 }
 
@@ -76,6 +79,13 @@ bool EvolverLog::init(boost::shared_ptr<EvolverConfiguration> conf,
 		return false;
 	}
 
+	std::string fitLogPath = logPath_ + "/" + FIT_LOG_FILE;
+	fitVals.open(fitLogPath.c_str());
+	if (!fitVals.is_open()){
+	  std::cout << "Can't open FitVals file " << " " <<  fitLogPath << std::endl;
+		return false;
+	}
+
 	// copy evolution configuration file
 	copyConfFile(conf->confFileName);
 	// copy simulator configuration file
@@ -92,8 +102,8 @@ bool EvolverLog::init(boost::shared_ptr<EvolverConfiguration> conf,
 
 	return true;
 }
-
-EvolverLog::~EvolverLog() {
+  
+  EvolverLog::~EvolverLog() {
 }
 
 bool EvolverLog::logGeneration(int step, Population &population) {
@@ -107,7 +117,7 @@ bool EvolverLog::logGeneration(int step, Population &population) {
 	// log best, avg, stddev
 	double best,average,stdev;
 	population.getStat(best,average,stdev);
-	std::cout << "Best: " << best << " Average: " << average << " STD: " <<
+	std::cout << step << " Best: " << best << " Average: " << average << " STD: " <<
 				stdev << std::endl;
 	bestAvgStd_ << step << " " << best << " " <<
 			average << " "  << stdev << std::endl;

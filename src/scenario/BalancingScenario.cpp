@@ -32,6 +32,8 @@
 #include "Robot.h"
 #include "Models.h"
 
+#include "evolution/engine/EvolverLog.h"
+
 namespace robogen {
 
 BalancingScenario::BalancingScenario(boost::shared_ptr<RobogenConfig> robogenConfig) :
@@ -98,16 +100,22 @@ bool BalancingScenario::endSimulation() {
 double BalancingScenario::getFitness() {
 
 	double fitness = 1000000;
+	double distance;
+	double angle;
 	for (unsigned int i = 0; i < distances_.size(); ++i) {
 //	std::cout << "Angles: " << anglesX_[i] << " " << anglesY_[i] << std::endl;
 //	std::cout << "Accels: " << accelsX_[i] << " " << accelsY_[i] << std::endl;
 	std::cout << distances_[i] << std::endl;
 
-	  double trialFit = distances_[i]*100-(exp(anglesX_[i])+exp(anglesY_[i])+exp(accelsX_[i])+exp(accelsY_[i]));
-		if (trialFit < fitness)
+	  double trialFit = distances_[i]*100-(anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
+	  if (trialFit < fitness) {
 			fitness = trialFit;
+			distance = distances_[i];
+			angle = (anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
+	  }
 	}
-
+	std::cout << "Writing" << std::endl;
+	EvolverLog::getFitLog() << distance << angle << std::endl;
 	return fitness;
 }
 
