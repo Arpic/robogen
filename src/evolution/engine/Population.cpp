@@ -120,6 +120,9 @@ boost::shared_ptr<RobotRepresentation> Population::best() {
 	for (unsigned int i = 0; i < this->size(); i++)
 		acc(this->at(i)->getVals().first);
 	averageDist = boost::accumulators::mean(acc);
+
+	acc = boost::accumulators::accumulator_set<double,
+      boost::accumulators::stats<boost::accumulators::tag::mean> >();
 	for (unsigned int i = 0; i < this->size(); i++)
 		acc(this->at(i)->getVals().second);
 	averageAngle = boost::accumulators::mean(acc);

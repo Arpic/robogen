@@ -121,9 +121,10 @@ bool EvolverLog::logGeneration(int step, Population &population) {
 	bestAvgStd_ << step << " " << best << " " <<
 			average << " "  << stdev << std::endl;
 
-	population.getVals(best, average);
-	fitVals_ << step << " " << best << " " <<
-			average <<std::endl;
+	double distance, angle;
+	population.getVals(distance, angle);
+	fitVals_ << step << " " << distance << " " <<
+			angle <<std::endl;
 	
 
 	// save robot file of best robot (don't do with fake robot representation)

@@ -99,23 +99,16 @@ bool BalancingScenario::endSimulation() {
 
 double BalancingScenario::getFitness() {
 
-	double fitness = 1000000;
+	double fitness = -1000000;
 	for (unsigned int i = 0; i < distances_.size(); ++i) {
-//	std::cout << "Angles: " << anglesX_[i] << " " << anglesY_[i] << std::endl;
-//	std::cout << "Accels: " << accelsX_[i] << " " << accelsY_[i] << std::endl;
-	std::cout << distances_[i] << std::endl;
-
-	  double trialFit = distances_[i]*100-(anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
-	  if (trialFit < fitness) {
+	  double trialFit = distances_[i]*500-log(anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
+	  if (trialFit > fitness) {
 			fitness = trialFit;
 			distance = distances_[i];
 			angle = (anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
 	  }
 	}
-	//std::cout << "Writing: " << distance << " " << angle << std::endl;
-	//EvolverLog::Log(distance, angle);
-	//	robogen::fitVals<< distance << " " << angle << std::endl;
-	//EvolverLog::getFitLog() << distance << " " << angle << std::endl;
+	
 	return fitness;
 }
 
