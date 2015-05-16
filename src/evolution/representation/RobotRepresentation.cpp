@@ -77,6 +77,7 @@ RobotRepresentation::RobotRepresentation(const RobotRepresentation &r) {
 	}
 	// fitness and associated flag are same
 	fitness_ = r.fitness_;
+	vals_ = r.vals_;
 	evaluated_ = r.evaluated_;
 	maxid_ = r.maxid_;
 }

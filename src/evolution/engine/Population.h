@@ -81,7 +81,7 @@ public:
 	 * Requires the population to be evaluated.
 	 */
 	bool getStat(double &best, double &average, double &stdev) const;
-	bool getVals(double&, double&) const;
+	bool getVals(double&, double&, double&, double&) const;
 };
 
 } /* namespace robogen */

@@ -64,8 +64,8 @@ bool BalancingScenario::afterSimulationStep() {
 
   std::vector<boost::shared_ptr<Sensor> > sensors;
   boost::dynamic_pointer_cast<CoreComponentModel, Model>(getRobot()->getCoreComponent())->getSensors(sensors);
-  accelsX_[curTrial_] = std::max(accelsX_[curTrial_], boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[0])->read());
-  accelsY_[curTrial_] = std::max(accelsY_[curTrial_], boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[1])->read());
+  accelsX_[curTrial_] = std::max(abs(accelsX_[curTrial_]), abs(boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[0])->read()));
+  accelsY_[curTrial_] = std::max(abs(accelsY_[curTrial_]), abs(boost::dynamic_pointer_cast<SimpleSensor, Sensor>(sensors[1])->read()));
   double angle;
   osg::Vec3 rotaxis;
   getRobot()->getCoreComponent()->getRootAttitude().getRotate(angle,rotaxis);
@@ -101,11 +101,11 @@ double BalancingScenario::getFitness() {
 
 	double fitness = -1000000;
 	for (unsigned int i = 0; i < distances_.size(); ++i) {
-	  double trialFit = distances_[i]*500-log(anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
+	  double trialFit = distances_[i]*500-log(1+anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
 	  if (trialFit > fitness) {
-			fitness = trialFit;
-			distance = distances_[i];
-			angle = (anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
+	    fitness = trialFit;
+	    distance = distances_[i];
+	    angle = (anglesX_[i]+anglesY_[i]+accelsX_[i]+accelsY_[i]);
 	  }
 	}
 	

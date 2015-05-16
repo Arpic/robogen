@@ -110,22 +110,25 @@ boost::shared_ptr<RobotRepresentation> Population::best() {
 	return this->at(0);
 }
 
-  bool Population::getVals(double& averageDist, double &averageAngle) const {
+  bool Population::getVals(double& averageDist, double& stdDist, double &averageAngle, double& stdAngle) const {
 	if (!this->areEvaluated()) {
 		std::cout << "Trying to get stats on non-evaluated population"
 				<< std::endl;
+		return false;
 	}
 	boost::accumulators::accumulator_set<double,
-			boost::accumulators::stats<boost::accumulators::tag::mean> > acc;
+      boost::accumulators::stats<boost::accumulators::tag::mean, boost::accumulators::tag::variance> > acc;
 	for (unsigned int i = 0; i < this->size(); i++)
 		acc(this->at(i)->getVals().first);
 	averageDist = boost::accumulators::mean(acc);
+	stdDist = boost::accumulators::variance(acc);
 
 	acc = boost::accumulators::accumulator_set<double,
-      boost::accumulators::stats<boost::accumulators::tag::mean> >();
+      boost::accumulators::stats<boost::accumulators::tag::mean, boost::accumulators::tag::variance> >();
 	for (unsigned int i = 0; i < this->size(); i++)
 		acc(this->at(i)->getVals().second);
 	averageAngle = boost::accumulators::mean(acc);
+	stdAngle = boost::accumulators::variance(acc);
 	return true;
   }    
 
